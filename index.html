@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediBot</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header class="header">
+    <div class="title">
+      <h1>MediBot</h1>
+      <p>your health buddy</p>
+    </div>
+    <div class="profile-container">
+      <div class="profile-icon">👤</div>
+      <div class="profile-popup">
+        <p><strong>Your Name</strong></p>
+        <p>Email: you@example.com</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="chat-container" id="chatbox"></main>
+
+  <div class="input-container">
+    <input type="text" id="userInput" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</body>
+</html>
+
