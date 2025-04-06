@@ -1,4 +1,4 @@
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById("userInput");
   const message = input.value.trim();
   if (message === "") return;
@@ -6,10 +6,33 @@ function sendMessage() {
   addMessage(message, "user");
   input.value = "";
 
-  setTimeout(() => {
-    addMessage(`Got it! You said: "${message}"`, "bot");
-  }, 500);
+  try {
+    const response = await fetch("https://medibot-backend-0def.onrender.com", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+    const botReply = data.reply || "Sorry, something went wrong!";
+    const condition = data.conditionLevel;
+    const note = data.note || "";
+
+    let statusMessage = "";
+    if (condition) {
+      statusMessage = `🩺 Status: **${condition.toUpperCase()}**`;
+      if (note) statusMessage += `\n💡 Note: ${note}`;
+    }
+
+    addMessage(`${botReply}\n\n${statusMessage}`, "bot");
+  } catch (error) {
+    console.error("Error talking to backend:", error);
+    addMessage("⚠️ Unable to reach MediBot server. Please try again later.", "bot");
+  }
 }
+
 
 function addMessage(text, sender) {
   const chatbox = document.getElementById("chatbox");
@@ -26,14 +49,9 @@ function addMessage(text, sender) {
   messageDiv.appendChild(timestamp);
   chatbox.appendChild(messageDiv);
 
-  // Scroll to bottom
   chatbox.scrollTop = chatbox.scrollHeight;
-
-  // Check if content height is less than container height
-  const isScrollable = chatbox.scrollHeight > chatbox.clientHeight;
-  chatbox.style.justifyContent = isScrollable ? "flex-start" : "center";
+  chatbox.style.justifyContent = chatbox.scrollHeight > chatbox.clientHeight ? "flex-start" : "center";
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   const profileIcon = document.querySelector(".profile-icon");
@@ -54,5 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       sendMessage();
     }
   });
-});
 
+  // Initial friendly greeting
+  addMessage("👋 Hello! I'm MediBot, your health companion.\n\nPlease enter your symptoms or medical stats, e.g. -\nheart rate 130 bpm\nchest ache\n\nI’ll provide a quick assessment.", "bot");
+});
