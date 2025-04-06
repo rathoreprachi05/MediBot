@@ -7,7 +7,7 @@ async function sendMessage() {
   input.value = "";
 
   try {
-    const response = await fetch("https://medibot-backend-0def.onrender.com", {
+    const response = await fetch("https://medibot-backend-0def.onrender.com/api/message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
