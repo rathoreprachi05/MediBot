@@ -9,7 +9,6 @@ async function sendMessage() {
   try {
     const response = await fetch("https://medibot-backend-0def.onrender.com/api/message", {
       method: "POST",
-      
       headers: {
         "Content-Type": "application/json"
       },
@@ -23,15 +22,29 @@ async function sendMessage() {
     }
 
     const data = await response.json();
+    console.log("Bot response:", data);
+
     const botReply = data.reply || "Sorry, something went wrong!";
-    addMessage(botReply, "bot");
+    const conditionLevel = data.conditionLevel || "";
+    const note = data.note || "";
+
+    let fullReply = botReply;
+
+    if (conditionLevel) {
+      fullReply += `\n\n🩺 Condition Level: ${conditionLevel.toUpperCase()}`;
+    }
+
+    if (note) {
+      fullReply += `\n🔍 Note: ${note}`;
+    }
+
+    addMessage(fullReply, "bot");
+
   } catch (error) {
     console.error("Error talking to backend:", error);
     addMessage("⚠️ Unable to reach MediBot server. Please try again later.", "bot");
   }
 }
-
-
 
 function addMessage(text, sender) {
   const chatbox = document.getElementById("chatbox");
@@ -73,5 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initial friendly greeting
-  addMessage("👋 Hello! I'm MediBot, your health companion.\n\nPlease enter your symptoms or medical stats, e.g. -\nheart rate 130 bpm\nchest ache\n\nI’ll provide a quick assessment.", "bot");
+  addMessage(
+    "👋 Hello! I'm MediBot, your health companion.\n\nPlease enter your symptoms or medical stats, e.g. -\nheart rate 130 bpm\nchest ache\n\nI’ll provide a quick assessment.",
+    "bot"
+  );
 });
