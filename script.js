@@ -7,7 +7,7 @@ async function sendMessage() {
   input.value = "";
 
   try {
-    const response = await fetch("https://medibot-backend-0def.onrender.com", {
+    const response = await fetch("https://medibot-backend.onrender.com/api/message", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -15,23 +15,21 @@ async function sendMessage() {
       body: JSON.stringify({ message })
     });
 
-    const data = await response.json();
-    const botReply = data.reply || "Sorry, something went wrong!";
-    const condition = data.conditionLevel;
-    const note = data.note || "";
-
-    let statusMessage = "";
-    if (condition) {
-      statusMessage = `🩺 Status: **${condition.toUpperCase()}**`;
-      if (note) statusMessage += `\n💡 Note: ${note}`;
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Invalid JSON response from server");
     }
 
-    addMessage(`${botReply}\n\n${statusMessage}`, "bot");
+    const data = await response.json();
+    const botReply = data.reply || "Sorry, something went wrong!";
+    addMessage(botReply, "bot");
   } catch (error) {
     console.error("Error talking to backend:", error);
     addMessage("⚠️ Unable to reach MediBot server. Please try again later.", "bot");
   }
 }
+
 
 
 function addMessage(text, sender) {
