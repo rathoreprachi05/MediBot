@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initial friendly greeting
   addMessage(
-    "👋 Hello! I'm MediBot, your health companion.\n\nPlease enter your symptoms or medical stats, e.g. -\nheart rate 130 bpm\nchest ache\n\nI’ll provide a quick assessment.",
+    "👋 Hello! I'm MediBot, your health companion.\n\n\nPlease enter your symptoms or medical stats, e.g. -\n\n-heart rate 130 bpm\n-chest ache\n\nI’ll provide a quick assessment.",
     "bot"
   );
 });
