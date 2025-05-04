@@ -16,6 +16,7 @@ async function sendMessage() {
       body: JSON.stringify({ message })
     });
 
+    
     // Check if response is JSON
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
